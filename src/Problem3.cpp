@@ -48,7 +48,7 @@ Note :
 
 Difficulty : Medium
 */
-#include <stdlib.h>;
+#include <stdlib.h>
 #include <stdio.h>
 
 //data can be accessed using root->data;
@@ -57,11 +57,41 @@ struct enode{
 	struct enode *left;
 	struct enode *right;
 };
+typedef struct enode *tptr;
+char postfix[100];
 
-/*
-Helper Functions are optional to write 
-*/
-//Helper Functions Start
+long operands[500] = { 0 };
+int  top = -1;;
+#define maxsize 500
+
+struct stack{
+	char c;
+	long data;
+};
+
+struct stack s[maxsize] = {0};
+
+void addstack(char ch){
+	top++;
+	s[top].c = ch;
+}
+
+long delstack(){
+	long res; 
+	res = s[top].c;
+	top--;
+	return res;
+}
+
+void addData(int dat){
+	top++;
+	s[top].data = dat;
+}
+
+
+
+
+
 int isOperator(char *data){
 	return 0;
 }
@@ -70,10 +100,99 @@ int isOperand(char *data){
 }
 int getOperand(char *data){
 	//converts data string to an integer "123" => 123
-	return 0;
+	long sum = 0;
+	int i = 0;
+	if (data[i] = '-')
+		i = 1;
+	else
+		i = 0;
+	while (data[i] != '\0'){
+		sum = sum * 10 + (data[i] - 48);
+		i++;
+	}
+
+	if (data[i] == '-')
+		return sum*-1;
+	else
+		return sum;
 }
+int k = 0;
+void   convertOperands(tptr root){
+
+	if (root != NULL){
+		convertOperands(root->left);
+		if (root->left == NULL && root->right == NULL)
+			operands[k++] = getOperand(root->data);
+		convertOperands(root->right);
+	}
+
+}
+
+
+
+
+int i = 0;
+int j = 0;
+
+void convertToPostfix(tptr root){
+
+	if (root != NULL){
+		convertToPostfix(root->left);
+		convertToPostfix(root->right);
+		if (root->left == NULL && root->right == NULL)
+			postfix[i++] = j++;
+		else
+			postfix[i++] = root->data[0];
+	}
+	postfix[i] = '\0';
+}
+
+
 //Helper Functions end
 int solve_tree(struct enode *root){
+
+	long i, op1, op2, res;
+	int k = 0;
+
+	if (root == NULL)
     return -1;
+
+	convertOperands(root);
+	convertOperands(root);
+
+	top = -1;
+	i = 0;
+	while (postfix[i] != '\0'){
+		if (postfix[i] != '-' || postfix[i] != '*' || postfix[i] != '+')
+			addData(operands[k++]);
+		else{
+			switch (postfix[i])
+			{
+			case '+':
+				op2 = delstack();
+				op1 = delstack();
+				res = op1 + op2;
+				break;
+			case '-':
+				op2 = delstack();
+				op1 = delstack();
+				res = op1 - op2;
+				break;
+			case '*':
+				op2 = delstack();
+				op1 = delstack();
+				res = op1 * op2;
+				break;
+
+			default:
+				break; 
+			}
+			addData(res);
+		}
+		i++;
+	}
+	res = delstack();
+	return res;
+
 }
 

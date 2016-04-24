@@ -1,6 +1,6 @@
-#include "stdafx.h";
-#include <stdlib.h>;
-#include "./../src/Problem3.cpp";
+#include "stdafx.h"
+#include <stdlib.h>
+#include "./../src/Problem3.cpp"
 
 using namespace System;
 using namespace System::Text;

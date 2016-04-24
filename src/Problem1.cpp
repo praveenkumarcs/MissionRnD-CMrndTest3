@@ -43,6 +43,7 @@ Difficulty : Easy
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+int possum = 0,negsum = 0, nodes = 0, sumoffstN = 0;
 
 struct node{
 	int data;
@@ -52,5 +53,38 @@ struct node{
 
 
 int get_missing_value(struct node *root,int n){
-    return -1;
+
+
+	
+	if (root == NULL || n < 0)
+		return -1;	
+
+	if (root != NULL){
+		get_missing_value(root->left, n);
+		if (root->data >= 0 && root->data <= n)
+			possum += root->data;
+		if (root->data <= 0 && root->data >= -n)
+			negsum += root->data;
+		get_missing_value(root->right, n);
+	}
+	sumoffstN = (n*(n + 1)) / 2;
+	if (sumoffstN - possum <= n)
+		return sumoffstN - possum;
+	sumoffstN *= -1;
+	if (sumoffstN - negsum >= -n)
+		return sumoffstN - negsum;
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
